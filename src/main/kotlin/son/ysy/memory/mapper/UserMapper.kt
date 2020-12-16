@@ -7,13 +7,13 @@ import org.apache.ibatis.annotations.Select
 interface UserMapper {
 
     /**
-     *通过手机号+密码验证用户
+     *通过手机号+密码获取用户id
      * @param phone 手机号
      * @param password 密码
-     * @return true 验证通过
+     * @return id
      */
-    @Select("select count(*)>0 from t_user where c_phone=#{phone} and c_password=#{password};")
-    fun checkUserByPhoneAndPassword(phone: String, password: String): Boolean
+    @Select("select c_id from t_user where c_phone=#{phone} and c_password=#{password} limit 1;")
+    fun getIdByPhoneAndPassword(phone: String, password: String): String?
 
     /**
      *通过手机号判断用户是否已注册
@@ -28,6 +28,6 @@ interface UserMapper {
      * @param phone 手机号
      * @return 称呼
      */
-    @Select("select c_marker from t_user where c_phone =#{phone} limit 1;")
-    fun getMarkerByPhone(phone: String): String?
+    @Select("select c_marker from t_user where c_id =#{id}::uuid limit 1;")
+    fun getMarkerById(id: String): String?
 }

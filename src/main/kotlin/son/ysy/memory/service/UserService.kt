@@ -2,6 +2,7 @@ package son.ysy.memory.service
 
 import kotlinx.coroutines.CoroutineScope
 import org.apache.ibatis.annotations.Select
+import son.ysy.memory.entity.UserId
 
 interface UserService {
     /**
@@ -14,8 +15,8 @@ interface UserService {
 
     /**
      * 通过手机号返回称呼
-     * @param phone 手机号
+     * @param id 用户id
      * @return 称呼
      */
-    fun getMarkerByPhone(scope: CoroutineScope, phone: String): String
+    fun getMarkerByPhone(scope: CoroutineScope, id: String): String
 }

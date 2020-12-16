@@ -4,11 +4,12 @@ import kotlinx.coroutines.reactor.mono
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import son.ysy.memory.entity.LoginResponseParam
+import son.ysy.memory.entity.UserId
 import son.ysy.memory.service.UserService
 
 @RestController
 @RequestMapping("user")
-class UserController {
+class UserController : BaseController() {
 
     @Autowired
     private lateinit var userService: UserService
@@ -16,10 +17,10 @@ class UserController {
     @PostMapping("login")
     fun postLogin(@RequestBody loginParam: LoginResponseParam) = mono {
         userService.loginByPhoneAndPassword(this, loginParam.phone, loginParam.password)
-    }
+    }.toResponseResult()
 
     @GetMapping("marker")
-    fun getUserMarker(phone: String) = mono {
-        userService.getMarkerByPhone(this, phone)
-    }
+    fun getUserMarker(userId: UserId) = mono {
+        userService.getMarkerByPhone(this, userId.value)
+    }.toResponseResult()
 }

@@ -8,6 +8,7 @@ class YsyMemoryApplicationTests {
 
 	@Test
 	fun contextLoads() {
+
 	}
 
 }
