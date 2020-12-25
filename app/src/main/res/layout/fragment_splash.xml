@@ -8,11 +8,10 @@
     app:layoutDescription="@xml/fragment_splash_scene"
     tools:context=".ui.splash.SplashFragment">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <son.ysy.memory.widget.LoadingAvatarView
         android:id="@+id/ivSplashAvatar"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:focusable="true"
         android:src="@mipmap/avatar_splash"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
@@ -20,7 +19,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25"
-        app:shapeAppearance="@style/circleImageStyle"
+        app:progressColor="@color/purple_500"
+        app:progressPercent="0.1"
         tools:layout_constraintWidth_percent="0.5" />
 
     <TextView
@@ -40,7 +40,7 @@
         android:id="@+id/bgSplash"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/teal_200"
+        android:background="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="@id/clickAreaSplash"
         app:layout_constraintEnd_toEndOf="@id/clickAreaSplash"
         app:layout_constraintStart_toStartOf="@id/clickAreaSplash"
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
-        android:textColor="@color/purple_500"
+        android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/clickAreaSplash"
         app:layout_constraintEnd_toEndOf="parent"
@@ -85,56 +85,13 @@
         app:layout_constraintStart_toEndOf="@id/tvSplashButtonText"
         app:layout_constraintTop_toTopOf="@id/tvSplashButtonText" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilSplashPhone"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:alpha="0"
-        android:hint="@string/string_splash_phone_hint"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@id/tilSplashPassword"
-        app:layout_constraintEnd_toEndOf="@id/tilSplashPassword"
-        app:layout_constraintStart_toStartOf="@id/tilSplashPassword">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSplashPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:inputType="phone"
-            android:maxLength="11" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilSplashPassword"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:alpha="0"
-        android:hint="@string/string_splash_password_hint"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.75">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSplashPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:inputType="phone"
-            android:maxLength="11" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Space
-        android:id="@+id/spaceSplashInputTop"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@id/tilSplashPhone"
-        app:layout_constraintStart_toEndOf="parent" />
+    <!--    <Space-->
+    <!--        android:id="@+id/spaceSplashInputTop"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_marginBottom="32dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@id/tilSplashPhone"-->
+    <!--        app:layout_constraintStart_toEndOf="parent" />-->
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

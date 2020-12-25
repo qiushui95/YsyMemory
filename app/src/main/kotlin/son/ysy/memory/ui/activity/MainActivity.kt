@@ -1,7 +1,8 @@
 package son.ysy.memory.ui.activity
 
 import android.os.Bundle
-import com.blankj.utilcode.util.KeyboardUtils
+import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import son.ysy.memory.base.BaseActivity
 import son.ysy.memory.databinding.ActivityMainBinding
@@ -12,6 +13,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::clas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        KeyboardUtils.fixAndroidBug5497(this)
+        viewModel.loginErrorMessage
+            .observeInActivity(this) {
+                ToastUtils.showLong(it)
+            }
     }
 }

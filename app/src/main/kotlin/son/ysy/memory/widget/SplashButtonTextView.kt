@@ -3,6 +3,7 @@ package son.ysy.memory.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.blankj.utilcode.util.StringUtils
 import son.ysy.memory.R
 
@@ -24,7 +25,11 @@ class SplashButtonTextView @JvmOverloads constructor(
         setText(R.string.string_splash_login)
     }
 
-    fun showLoginContinueText() {
-        setText(R.string.string_splash_login_continue)
+    fun visible() {
+        isVisible = true
+    }
+
+    fun gone() {
+        isVisible = false
     }
 }

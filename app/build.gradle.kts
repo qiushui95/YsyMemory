@@ -4,6 +4,7 @@ import son.ysy.useful.dependencies.AndroidDependency
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -74,4 +75,24 @@ dependencies {
 
     implementation(AndroidDependency.Navigation.Core.fullGradle)
     implementation(AndroidDependency.Navigation.Ui.fullGradle)
+
+    implementation(AndroidDependency.BasePopup.Stable.fullGradle)
+
+    implementation("son.ysy.key.creator:annotations:1.0.0")
+    kapt("son.ysy.key.creator:compiler:1.0.0")
+
+    implementation(AndroidDependency.Single.UnPeekLiveData.fullGradle)
+
+    implementation(AndroidDependency.MoShi.Core.fullGradle)
+    kapt(AndroidDependency.MoShi.Compiler.fullGradle)
+
+    implementation(AndroidDependency.Retrofit.Core.fullGradle)
+    implementation(AndroidDependency.Retrofit.MoShi.fullGradle)
+
+    implementation(AndroidDependency.OkHttp.Core.fullGradle)
+    debugImplementation(AndroidDependency.OkHttp.Interceptor.fullGradle)
+
+    debugImplementation(AndroidDependency.Chucker.Release.fullGradle)
+    releaseImplementation(AndroidDependency.Chucker.Release.fullGradle)
+
 }

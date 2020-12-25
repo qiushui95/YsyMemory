@@ -1,11 +1,8 @@
 package son.ysy.memory.ui.splash
 
-import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.SimpleTransitionListener
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.net.toUri
 import androidx.core.view.doOnLayout
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
@@ -13,39 +10,33 @@ import com.blankj.utilcode.util.LogUtils
 import org.joda.time.DateTime
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import razerdp.basepopup.BasePopupWindow
 import son.ysy.memory.R
 import son.ysy.memory.base.BaseFragment
 import son.ysy.memory.databinding.FragmentSplashBinding
+import son.ysy.memory.dialog.LoginDialog
 import son.ysy.memory.ui.activity.MainViewModel
-import kotlin.math.abs
 import kotlin.math.min
 
-class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::class),
-    KeyboardUtils.OnSoftInputChangedListener {
+class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::class) {
 
     private val mainViewModel by sharedViewModel<MainViewModel>()
     private val viewModel by viewModel<SplashViewModel>()
 
-
     override fun onBindView(binding: FragmentSplashBinding) {
         BarUtils.setNavBarVisibility(requireActivity(), false)
-        resetAvatarSize(0, R.id.start, R.id.end, R.id.login, R.id.loginInput)
+        resetAvatarSize(R.id.start, R.id.end, R.id.middle)
         bindViewModel()
-        bindSoftKeyboard()
+        bindMotionListener()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        unbindSoftKeyboard()
-    }
-
-    private fun resetAvatarSize(offset: Int = 0, vararg stateIds: Int) {
+    private fun resetAvatarSize(vararg stateIds: Int) {
         binding?.root?.doOnLayout {
             val root = binding?.root ?: return@doOnLayout
-            val avatarPercent = (min(
+            val avatarPercent = min(
                 root.width,
                 root.height
-            ) - offset) / 2f / root.width
+            ) / 2f / root.width
 
             stateIds.forEach {
                 updateAvatarConstrain(avatarPercent, it)
@@ -53,9 +44,17 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
         }
     }
 
+    private fun updateAvatarConstrain(avatarPercent: Float, @IdRes stateId: Int) {
+        val mlSplash = binding?.mlSplash ?: return
+        val constraintSet = mlSplash.getConstraintSet(stateId)
+        constraintSet.constrainPercentWidth(R.id.ivSplashAvatar, avatarPercent)
+        mlSplash.updateState(stateId, constraintSet)
+    }
+
     private fun bindViewModel() {
         mainViewModel.hasLogin
             .observe {
+                LogUtils.e(it)
                 val binding = binding ?: return@observe
                 if (!it) {
                     binding.tvSplashWelcome.text = getString(
@@ -64,7 +63,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
                     )
                     binding.tvSplashButtonText.setText(R.string.string_splash_login)
                     binding.clickAreaSplash.setOnClickListener {
-                        binding.mlSplash.transitionToState(R.id.login)
+                        binding.mlSplash.transitionToState(R.id.middle)
                     }
                 } else {
 
@@ -76,19 +75,26 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
             }
     }
 
-    private fun bindSoftKeyboard() {
-        KeyboardUtils.registerSoftInputChangedListener(requireActivity(), this)
-    }
 
-    private fun unbindSoftKeyboard() {
-        KeyboardUtils.unregisterSoftInputChangedListener(requireActivity().window)
-    }
-
-    private fun updateAvatarConstrain(avatarPercent: Float, @IdRes stateId: Int) {
-        val mlSplash = binding?.mlSplash ?: return
-        val constraintSet = mlSplash.getConstraintSet(stateId)
-        constraintSet.constrainPercentWidth(R.id.ivSplashAvatar, avatarPercent)
-        mlSplash.updateState(stateId, constraintSet)
+    private fun bindMotionListener() {
+        binding?.mlSplash?.addTransitionListener(object : SimpleTransitionListener() {
+            override fun onTransitionCompleted(motionLayout: MotionLayout, currentId: Int) {
+                val binding = binding ?: return
+                when (currentId) {
+                    R.id.middle -> {
+                        LoginDialog(
+                            this@SplashFragment,
+                            binding.bgSplash.width,
+                            binding.bgSplash.height
+                        ).setOnDismissListener(object : BasePopupWindow.OnDismissListener() {
+                            override fun onDismiss() {
+                                binding.mlSplash.transitionToState(R.id.start)
+                            }
+                        }).showPopupWindow()
+                    }
+                }
+            }
+        })
     }
 
     private fun getTimeDesc() = when (DateTime.now().hourOfDay) {
@@ -99,19 +105,5 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
         in 14..17 -> "下午好"
         in 18..19 -> "傍晚好"
         else -> "晚上好"
-    }
-
-    override fun onSoftInputChanged(height: Int) {
-        val binding = binding ?: return
-        val mlSplash = binding.mlSplash
-        if (height > 0 && mlSplash.currentState == R.id.login) {
-            if (binding.bgSplash.top < binding.tvSplashWelcome.bottom) {
-                resetAvatarSize(100, R.id.loginInput)
-            }
-
-            mlSplash.transitionToState(R.id.loginInput)
-        } else if (height <= 0 && mlSplash.currentState == R.id.loginInput) {
-            mlSplash.transitionToState(R.id.login)
-        }
     }
 }

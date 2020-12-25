@@ -6,6 +6,7 @@ import com.tencent.mmkv.MMKV
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import son.ysy.memory.di.*
 import son.ysy.memory.ui.activity.MainViewModel
 import son.ysy.memory.ui.splash.SplashViewModel
 
@@ -17,21 +18,19 @@ class App : Application() {
         Utils.init(this)
 
         startKoin {
-            modules(module {
-                single {
-                    MMKV.initialize(applicationContext)
-                    MMKV.defaultMMKV(MMKV.SINGLE_PROCESS_MODE, "ysy")
+            modules(
+                ApiModule.apiModule,
+                HttpModule.httpModule,
+                JsonModule.jsonModule,
+                ViewModelModule.viewModelModule,
+                RepositoryModule.repositoryModule,
+                MoreModule.moreModule,
+                module {
+                    single {
+                        this@App
+                    }
                 }
-                single {
-                    getKoin()
-                }
-                viewModel {
-                    MainViewModel(get(), get())
-                }
-                viewModel {
-                    SplashViewModel(get())
-                }
-            })
+            )
         }
     }
 }

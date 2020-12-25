@@ -5,4 +5,11 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="loginInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">#FFB2B2B2</item>
+        <item name="boxStrokeColor">@color/login_input_stroke_color</item>
+    </style>
 </resources>
