@@ -3,7 +3,7 @@ package son.ysy.memory.controller
 import kotlinx.coroutines.reactor.mono
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import son.ysy.memory.entity.LoginResponseParam
+import son.ysy.memory.entity.LoginRequestParam
 import son.ysy.memory.entity.UserId
 import son.ysy.memory.service.UserService
 
@@ -15,7 +15,7 @@ class UserController : BaseController() {
     private lateinit var userService: UserService
 
     @PostMapping("login")
-    fun postLogin(@RequestBody loginParam: LoginResponseParam) = mono {
+    fun postLogin(@RequestBody loginParam: LoginRequestParam) = mono {
         userService.loginByPhoneAndPassword(this, loginParam.phone, loginParam.password)
     }.toResponseResult()
 
