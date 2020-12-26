@@ -52,7 +52,6 @@ class MainViewModel(handle: SavedStateHandle, koin: Koin) : BaseViewModel() {
             }
     }
 
-
     fun onTokenChanged(newToken: String?) {
         savedTokeM.setValue(newToken ?: "")
     }
@@ -65,6 +64,8 @@ class MainViewModel(handle: SavedStateHandle, koin: Koin) : BaseViewModel() {
         } else {
             viewModelScope.launch {
                 userRepository.loginByPhoneAndPassword(phone, password)
+                    .dealBusy(isLoginBusyM)
+                    .dealError(loginErrorMessageM::setValue)
                     .collectLatest {
                         onTokenChanged(it)
                     }

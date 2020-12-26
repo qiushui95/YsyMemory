@@ -22,7 +22,7 @@ object HttpModule {
 
         single {
             Retrofit.Builder()
-                .baseUrl("http://192.168.31.16/")
+                .baseUrl("http://192.168.31.106/")
                 .addConverterFactory(MoshiConverterFactory.create(get()))
                 .build()
         }
