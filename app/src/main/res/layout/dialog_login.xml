@@ -37,7 +37,6 @@
         android:layout_marginTop="16dp"
         android:hint="@string/string_splash_phone_hint"
         android:visibility="invisible"
-        app:hintTextColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvLoginDialogTitle"
@@ -47,9 +46,10 @@
             android:id="@+id/etLoginDialogPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:inputType="phone"
-            android:maxLength="11" />
+            android:maxLength="11"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -67,8 +67,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:inputType="phone"
-            android:maxLength="11" />
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView

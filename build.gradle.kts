@@ -20,7 +20,7 @@ allprojects {
         mavenLocal()
         google()
         jcenter()
-        maven(url = "https://dl.bintray.com/974577817/release")
+        //maven(url = "https://dl.bintray.com/974577817/release")
     }
 }
 

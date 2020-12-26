@@ -54,7 +54,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
     private fun bindViewModel() {
         mainViewModel.hasLogin
             .observe {
-                LogUtils.e(it)
                 val binding = binding ?: return@observe
                 if (!it) {
                     binding.tvSplashWelcome.text = getString(

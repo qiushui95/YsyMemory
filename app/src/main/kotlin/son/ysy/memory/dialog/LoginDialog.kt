@@ -2,12 +2,11 @@ package son.ysy.memory.dialog
 
 import android.graphics.Color
 import android.view.View
-import android.view.animation.Animation
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.KeyboardUtils
 import kotlinx.coroutines.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import razerdp.basepopup.BaseLazyPopupWindow
-import razerdp.basepopup.BasePopupWindow
 import son.ysy.memory.R
 import son.ysy.memory.databinding.DialogLoginBinding
 import son.ysy.memory.ui.activity.MainViewModel
@@ -48,11 +47,18 @@ class LoginDialog(
                     awaitTransitionComplete()
                     transitionToState(R.id.end)
                     awaitTransitionComplete()
+                    KeyboardUtils.showSoftInput(binding.etLoginDialogPhone)
                 }
             }
         }
 
         binding.btnLoginDialogContinue.setOnClickListener {
+            arrayOf(
+                binding.etLoginDialogPhone,
+                binding.etLoginDialogPassword
+            ).firstOrNull { it.hasFocus() }
+                ?.apply(KeyboardUtils::hideSoftInput)
+
             mainViewModel.loginByPhoneAndPassword(
                 binding.etLoginDialogPhone.text.toString(),
                 binding.etLoginDialogPassword.text.toString()

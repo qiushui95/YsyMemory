@@ -17,6 +17,19 @@ class UsefulLiveData<T : Any> private constructor(private val liveDataM: Mutable
         }
     )
 
+    constructor(
+        key: String,
+        handle: SavedStateHandle,
+        defaultValue: T,
+        initialValueGetter: (key: String) -> T?
+    ) : this(
+        when (val initialValue = initialValueGetter(key)) {
+            null -> handle.getLiveData(key, defaultValue)
+            else -> handle.getLiveData(key, initialValue)
+        }
+    )
+
+
     constructor(key: String, handle: SavedStateHandle) : this(handle.getLiveData(key))
 
     constructor(initialValue: T) : this(MutableLiveData(initialValue))

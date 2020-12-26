@@ -78,8 +78,8 @@ dependencies {
 
     implementation(AndroidDependency.BasePopup.Stable.fullGradle)
 
-    implementation("son.ysy.key.creator:annotations:1.0.0")
-    kapt("son.ysy.key.creator:compiler:1.0.0")
+    implementation("son.ysy.key.creator:annotations:1.0.1")
+    kapt("son.ysy.key.creator:compiler:1.0.1")
 
     implementation(AndroidDependency.Single.UnPeekLiveData.fullGradle)
 
@@ -95,4 +95,13 @@ dependencies {
     debugImplementation(AndroidDependency.Chucker.Release.fullGradle)
     releaseImplementation(AndroidDependency.Chucker.Release.fullGradle)
 
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.freeCompilerArgs = (kotlinOptions.freeCompilerArgs + listOf(
+        "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
+        "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "-Xuse-experimental=kotlin.contracts.ExperimentalContracts",
+        "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi"
+    )).distinct()
 }

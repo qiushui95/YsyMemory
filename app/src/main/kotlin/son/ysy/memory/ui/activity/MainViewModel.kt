@@ -30,6 +30,7 @@ class MainViewModel(handle: SavedStateHandle, koin: Koin) : BaseViewModel() {
     private val savedTokeM = UsefulLiveData(
         MainViewModelKeys.savedToken,
         handle,
+        "",
         mmkv::decodeString
     )
 
