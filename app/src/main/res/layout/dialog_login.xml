@@ -49,6 +49,7 @@
             android:imeOptions="actionNext"
             android:inputType="phone"
             android:maxLength="11"
+            android:text="13540817567"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,6 +69,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
+            android:text="123456"
             android:maxLength="16"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>

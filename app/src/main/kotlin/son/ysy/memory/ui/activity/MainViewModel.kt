@@ -1,9 +1,6 @@
 package son.ysy.memory.ui.activity
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.map
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.StringUtils
 import com.kunminx.architecture.ui.callback.ProtectedUnPeekLiveData
@@ -16,44 +13,49 @@ import org.koin.core.Koin
 import son.ysy.creator.annotations.KeyCreator
 import son.ysy.memory.R
 import son.ysy.memory.base.BaseViewModel
+import son.ysy.memory.entity.LoginStatus
 import son.ysy.memory.repository.UserRepository
 import son.ysy.memory.useful.UsefulLiveData
 import son.ysy.memory.utils.RegexUtil
 
-@KeyCreator(keys = ["savedToken", "isLoginBusy"])
+@KeyCreator(keys = ["savedToken"])
 class MainViewModel(handle: SavedStateHandle, koin: Koin) : BaseViewModel() {
 
     private val mmkv: MMKV by koin.inject()
 
     private val userRepository: UserRepository by koin.inject()
 
-    private val savedTokeM = UsefulLiveData(
+    private val loginStatusLiveDataM = UsefulLiveData<LoginStatus>(
         MainViewModelKeys.savedToken,
-        handle,
-        "",
-        mmkv::decodeString
+        handle
     )
 
-    private val isLoginBusyM = UsefulLiveData(
-        MainViewModelKeys.isLoginBusy,
-        handle,
-        mmkv::decodeBool
-    )
+    val loginStatusLiveData by lazy {
+        loginStatusLiveDataM.liveDataDistinct
+    }
 
     private val loginErrorMessageM = UnPeekLiveData.Builder<String>().create()
 
     val loginErrorMessage: ProtectedUnPeekLiveData<String> = loginErrorMessageM
 
     val hasLogin by lazy {
-        savedTokeM.liveData
+        loginStatusLiveDataM.liveDataDistinct
+            .map { it.hasLogin }
             .distinctUntilChanged()
-            .map {
-                it.isNotBlank()
-            }
     }
 
-    fun onTokenChanged(newToken: String?) {
-        savedTokeM.setValue(newToken ?: "")
+    init {
+        getInitToken()
+    }
+
+    private fun getInitToken() {
+        viewModelScope.launch {
+            when (val savedToken = mmkv.decodeString(MainViewModelKeys.savedToken)) {
+                null -> loginStatusLiveDataM.setValue(LoginStatus.NoLogin)
+                else -> {
+                }
+            }
+        }
     }
 
     fun loginByPhoneAndPassword(phone: String, password: String) {
@@ -64,10 +66,12 @@ class MainViewModel(handle: SavedStateHandle, koin: Koin) : BaseViewModel() {
         } else {
             viewModelScope.launch {
                 userRepository.loginByPhoneAndPassword(phone, password)
-                    .dealBusy(isLoginBusyM)
-                    .dealError(loginErrorMessageM::setValue)
+                    .dealBusy(loginStatusLiveDataM::setValue) { isBusy ->
+                        LoginStatus.LoginPosting.takeIf { isBusy }
+                    }
+                    .dealError(loginErrorMessageM)
                     .collectLatest {
-                        onTokenChanged(it)
+                        loginStatusLiveDataM.setValue(LoginStatus.LoginIn(it))
                     }
             }
         }

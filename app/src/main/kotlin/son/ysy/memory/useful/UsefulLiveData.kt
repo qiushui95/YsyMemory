@@ -3,6 +3,7 @@ package son.ysy.memory.useful
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.distinctUntilChanged
 
 class UsefulLiveData<T : Any> private constructor(private val liveDataM: MutableLiveData<T>) {
 
@@ -37,6 +38,10 @@ class UsefulLiveData<T : Any> private constructor(private val liveDataM: Mutable
     constructor() : this(MutableLiveData())
 
     val liveData: LiveData<T> = liveDataM
+
+    val liveDataDistinct: LiveData<T> by lazy {
+        liveDataM.distinctUntilChanged()
+    }
 
     fun postValue(value: T) = liveDataM.postValue(value)
 
