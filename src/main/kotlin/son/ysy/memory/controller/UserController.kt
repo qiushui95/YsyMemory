@@ -16,11 +16,12 @@ class UserController : BaseController() {
 
     @PostMapping("login")
     fun postLogin(@RequestBody loginParam: LoginRequestParam) = mono {
-        userService.loginByPhoneAndPassword(this, loginParam.phone, loginParam.password)
+        userService.getNewToken(this, loginParam.phone, loginParam.password)
     }.toResponseResult()
 
     @GetMapping("marker")
     fun getUserMarker(userId: UserId) = mono {
-        userService.getMarkerByPhone(this, userId.value)
+//        userService.getMarkerByPhone(this, userId.value)
+        "爸爸"
     }.toResponseResult()
 }

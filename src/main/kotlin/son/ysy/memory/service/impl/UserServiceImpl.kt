@@ -23,8 +23,12 @@ class UserServiceImpl : UserService {
     @Autowired
     private lateinit var redis: StringRedisTemplate
 
-    override fun loginByPhoneAndPassword(scope: CoroutineScope, phone: String, password: String): String {
-        val userId = userMapper.getIdByPhoneAndPassword(phone, password)
+    override fun getNewToken(scope: CoroutineScope, phone: String, password: String): String {
+//        val userId = userMapper.getIdByPhoneAndPassword(phone, password)
+        val userId = when {
+            phone == "13540817567" && password == "123456" -> "10240"
+            else -> null
+        }
         return when {
             userId != null -> {
                 val newToken = DigestUtils.md5DigestAsHex("$phone${System.currentTimeMillis()}".toByteArray())
@@ -33,7 +37,10 @@ class UserServiceImpl : UserService {
                 }
                 newToken
             }
-            userMapper.checkUserRegistered(phone) -> {
+//            userMapper.checkUserRegistered(phone) -> {
+//                throw UserPasswordIncorrectError()
+//            }
+            phone == "13540817567" -> {
                 throw UserPasswordIncorrectError()
             }
             else -> {

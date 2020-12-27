@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    username: postgres
+    password: 1235
+    url: jdbc:postgresql://www.54ysy.site:5432/memory
+  redis:
+    host: www.54ysy.site
