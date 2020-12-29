@@ -25,7 +25,7 @@ interface UserMapper {
 
     /**
      * 通过手机号返回称呼
-     * @param phone 手机号
+     * @param id 用户id
      * @return 称呼
      */
     @Select("select c_marker from t_user where c_id =#{id}::uuid limit 1;")

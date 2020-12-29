@@ -21,7 +21,6 @@ class UserController : BaseController() {
 
     @GetMapping("marker")
     fun getUserMarker(userId: UserId) = mono {
-//        userService.getMarkerByPhone(this, userId.value)
-        "爸爸"
+        userService.getMarkerByPhone(this, userId.value)
     }.toResponseResult()
 }

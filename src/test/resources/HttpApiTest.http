@@ -1,5 +1,5 @@
 ### 登录
-POST https://{{baseUrl}}/user/login
+POST http://{{baseUrl}}/user/login
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ### 获取称呼
-GET https://{{baseUrl}}/user/marker
+GET http://{{baseUrl}}/user/marker
 Content-Type: application/json
 token:dc4ae97d8fae6e74b4e71b789fc3a60e
 

@@ -2,6 +2,6 @@ spring:
   datasource:
     username: postgres
     password: 1235
-    url: jdbc:postgresql:// 172.17.0.1:5432/memory
+    url: jdbc:postgresql://postgres:5432/memory
   redis:
-    host: 172.17.0.1
+    host: redis
