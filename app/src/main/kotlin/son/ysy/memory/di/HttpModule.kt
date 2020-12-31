@@ -1,13 +1,15 @@
 package son.ysy.memory.di
 
+import android.app.Application
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.squareup.moshi.Moshi
-import okhttp3.OkHttp
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import son.ysy.memory.http.MoshiConverterFactory
-import son.ysy.memory.json.ResponseResultJsonAdapter
+import son.ysy.memory.common.http.MoshiConverterFactory
+import son.ysy.memory.common.http.OkHttpClientConfigImpl.configMore
+import son.ysy.memory.common.http.TokenHeaderInterceptor
+import son.ysy.memory.common.json.ResponseResultJsonAdapter
 
 object HttpModule {
 
@@ -15,10 +17,12 @@ object HttpModule {
         single {
             OkHttpClient.Builder()
                 .addInterceptor(
-                    ChuckerInterceptor.Builder(get())
+                    ChuckerInterceptor.Builder(get<Application>())
                         .alwaysReadResponseBody(true)
                         .build()
                 )
+                .addInterceptor(TokenHeaderInterceptor(get()))
+                .configMore()
                 .build()
         }
 
@@ -27,11 +31,13 @@ object HttpModule {
                 .baseUrl("http://www.54ysy.site/")
                 .addConverterFactory(
                     MoshiConverterFactory(
+                        get(),
                         Moshi.Builder()
                             .add(ResponseResultJsonAdapter.factory)
                             .build()
                     )
                 )
+                .client(get())
                 .build()
         }
     }

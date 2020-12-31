@@ -4,24 +4,26 @@ import androidx.annotation.IdRes
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.constraintlayout.motion.widget.SimpleTransitionListener
 import androidx.core.view.doOnLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.StringUtils
+import kotlinx.coroutines.delay
 import org.joda.time.DateTime
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import razerdp.basepopup.BasePopupWindow
 import son.ysy.memory.R
-import son.ysy.memory.base.BaseFragment
+import son.ysy.memory.common.base.BaseFragment
 import son.ysy.memory.databinding.FragmentSplashBinding
 import son.ysy.memory.dialog.LoginDialog
-import son.ysy.memory.ui.activity.MainViewModel
+import son.ysy.memory.common.entity.LoginStatus
 import kotlin.math.min
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::class) {
 
-    private val mainViewModel by sharedViewModel<MainViewModel>()
     private val viewModel by viewModel<SplashViewModel>()
+
+    private var markObserver: Observer<String>? = null
 
     override fun onBindView(binding: FragmentSplashBinding) {
         BarUtils.setNavBarVisibility(requireActivity(), false)
@@ -52,22 +54,53 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
     }
 
     private fun bindViewModel() {
-        mainViewModel.hasLogin
-            .observe {
+        viewModel.loginStatus
+            .observe { loginStatus ->
                 val binding = binding ?: return@observe
-                if (!it) {
-                    binding.tvSplashWelcome.text = getString(
-                        R.string.string_splash_login_tip,
-                        getTimeDesc()
-                    )
-                    binding.tvSplashButtonText.setText(R.string.string_splash_login)
-                    binding.clickAreaSplash.setOnClickListener {
-                        binding.mlSplash.transitionToState(R.id.middle)
-                    }
-                } else {
+                when {
+                    !loginStatus.hasLogin -> {
+                        binding.tvSplashWelcome.text = getString(
+                            R.string.string_splash_login_tip,
+                            getTimeDesc()
+                        )
+                        binding.tvSplashButtonText.setText(R.string.string_splash_login)
+                        binding.clickAreaSplash.setOnClickListener {
+                            viewModel.onStateChanged(R.id.middle)
+                        }
 
+                        markObserver?.apply {
+                            viewModel.markerRequestGetter.dataLiveDataDistinct?.removeObserver(this)
+                        }
+                    }
+                    loginStatus is LoginStatus.LoginIn -> {
+                        binding.clickAreaSplash.setOnClickListener(null)
+                        binding.tvSplashButtonText.setText(R.string.string_common_busy)
+                        viewModel.onTokenChanged()
+                        markObserver = viewModel.markerRequestGetter.dataLiveDataDistinct?.observe {
+                            binding.tvSplashWelcome.text = getString(
+                                R.string.string_splash_welcome,
+                                getTimeDesc(),
+                                it
+                            )
+                            binding.clickAreaSplash.setOnClickListener {
+                                viewModel.onStateChanged(R.id.end)
+                            }
+
+                            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                                repeat(3) { second ->
+                                    binding.tvSplashButtonText.text = StringUtils.getString(
+                                        R.string.string_splash_enter_format,
+                                        3-second
+                                    )
+                                    delay(1000)
+                                }
+                                binding.clickAreaSplash.performClick()
+                            }
+                        }
+                    }
                 }
             }
+
         viewModel.stateId
             .observe {
                 binding?.mlSplash?.transitionToState(it)
@@ -84,7 +117,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
                         LoginDialog(
                             this@SplashFragment,
                             binding.bgSplash.width,
-                            binding.bgSplash.height
+                            binding.bgSplash.height,
+                            motionLayout.width
                         ).setOnDismissListener(object : BasePopupWindow.OnDismissListener() {
                             override fun onDismiss() {
                                 binding.mlSplash.transitionToState(R.id.start)

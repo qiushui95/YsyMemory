@@ -11,7 +11,7 @@ object ViewModelModule {
             MainViewModel(get(), get())
         }
         viewModel {
-            SplashViewModel(get())
+            SplashViewModel(get(),get())
         }
     }
 }

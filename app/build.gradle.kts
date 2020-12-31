@@ -15,6 +15,7 @@ android {
     defaultConfig {
         applicationId = "son.ysy.memory"
     }
+
     defaultConfig {
         minSdkVersion(BuildVersion.MinSdk.value)
         targetSdkVersion(BuildVersion.CompileSdk.value)
@@ -79,8 +80,8 @@ dependencies {
 
     implementation(AndroidDependency.BasePopup.Stable.fullGradle)
 
-    implementation("son.ysy.key.creator:annotations:1.0.1")
-    kapt("son.ysy.key.creator:compiler:1.0.1")
+    implementation(AndroidDependency.KeyCreator.Core.fullGradle)
+    kapt(AndroidDependency.KeyCreator.Compiler.fullGradle)
 
     implementation(AndroidDependency.Single.UnPeekLiveData.fullGradle)
 

@@ -5,7 +5,7 @@ import android.widget.Toast
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import son.ysy.memory.base.BaseActivity
+import son.ysy.memory.common.base.BaseActivity
 import son.ysy.memory.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::class) {
@@ -14,9 +14,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::clas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loginErrorMessage
-            .observeInActivity {
-                ToastUtils.showLong(it)
-            }
     }
 }

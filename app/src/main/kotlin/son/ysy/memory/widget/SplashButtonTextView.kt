@@ -13,17 +13,17 @@ class SplashButtonTextView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
-    fun showEnterText() {
-        setText(R.string.string_splash_enter)
-    }
-
-    fun showEnterText(second: Int) {
-        text = StringUtils.getString(R.string.string_splash_enter_format, second)
-    }
-
-    fun showLoginText() {
-        setText(R.string.string_splash_login)
-    }
+//    fun showEnterText() {
+//        setText(R.string.string_splash_enter)
+//    }
+//
+//    fun showEnterText(second: Int) {
+//        text = StringUtils.getString(R.string.string_splash_enter_format, second)
+//    }
+//
+//    fun showLoginText() {
+//        setText(R.string.string_splash_login)
+//    }
 
     fun visible() {
         isVisible = true
